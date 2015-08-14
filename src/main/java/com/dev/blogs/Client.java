@@ -17,10 +17,46 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
 public class Client {
-	public static final String cookieName = "";
-	public static final String cookieValue = "";
+	private String cookieName;
+	private String cookieValue;
+	private int statusCode;
+	private String content;
 	
-	public HttpResponse sendRequestByGetMethod(URL url) {
+	public Client() {
+		this.cookieName = "";
+		this.cookieValue = "";
+	}
+	
+	public Client(String cookieName, String cookieValue) {
+		this.cookieName = cookieName;
+		this.cookieValue = cookieValue;
+	}
+	
+	public String getCookieName() {
+		return cookieName;
+	}
+
+	public void setCookieName(String cookieName) {
+		this.cookieName = cookieName;
+	}
+
+	public String getCookieValue() {
+		return cookieValue;
+	}
+
+	public void setCookieValue(String cookieValue) {
+		this.cookieValue = cookieValue;
+	}
+	
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void sendRequestByGetMethod(URL url) {
 		try {
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpGet get = new HttpGet(url.toString());
@@ -33,14 +69,13 @@ public class Client {
 	
 			HttpResponse response = client.execute(get);
 			
-			return response;
+			setResults(response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
 	}
 	
-	public HttpResponse sendRequestByPostMethodWithSingleParameter(URL url, String data) {
+	public void sendRequestByPostMethodWithSingleParameter(URL url, String data) {
 		try {
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpPost post = new HttpPost(url.toString());
@@ -55,14 +90,13 @@ public class Client {
 			post.setEntity(new StringEntity(data));
 	
 			HttpResponse response = client.execute(post);
-			return response;
+			setResults(response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
 	}
 	
-	public HttpResponse sendRequestByPostMethodWithMultipleParameters(URL url, String data) {
+	public void sendRequestByPostMethodWithMultipleParameters(URL url, String data) {
 		try {
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpPost post = new HttpPost(url.toString());
@@ -80,32 +114,25 @@ public class Client {
 			post.setEntity(entity);
 	
 			HttpResponse response = client.execute(post);
-			return response;
+			setResults(response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
 	}
 	
-	public void printContent(HttpResponse response) {
+	private void setResults(HttpResponse response) {
 		try {
-			int statusCode = response.getStatusLine().getStatusCode();
+			statusCode = response.getStatusLine().getStatusCode();
 			
-			System.out.println("Status code: " + statusCode);
-	
 			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			StringBuilder result = new StringBuilder();
 			String line = "";
 			while ((line = rd.readLine()) != null) {
 				result.append(line);
 			}
-			System.out.println("Content: " + result);
+			content = result.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void main(String[] args) {
-		
-	}
+	}	
 }
