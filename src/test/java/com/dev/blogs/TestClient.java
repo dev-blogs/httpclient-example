@@ -16,7 +16,7 @@ public class TestClient {
 	@Test
 	public void testGetMethod() {
 		try {
-			URL url = new URL("http://www.google.ru");
+			URL url = new URL("http://www.dev-blogs.com");
 			client.sendRequestByGetMethod(url);
 			assertEquals(client.getStatusCode(), 200);
 		} catch (Exception e) {
@@ -25,7 +25,6 @@ public class TestClient {
 	}
 	
 	@Test
-	public void testPostMethod() {
-		
+	public void testPostMethod() {		
 	}
 }
